@@ -214,6 +214,14 @@ class IOBuffer(BIO):
             self.m2_bio_pop(self.bio)
         self.m2_bio_free(self.io)
 
+    def __iter__(self):
+        if not self.readable():
+            raise IOError, 'cannot read'
+        data = m2.bio_read(self.bio, 4096)
+        while data:
+            yield data
+            data = m2.bio_read(self.bio, 4096)
+
     def close(self):
         BIO.close(self)
 
